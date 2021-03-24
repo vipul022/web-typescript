@@ -117,9 +117,86 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/index.ts":[function(require,module,exports) {
-console.log('Hello!!');
-},{}],"../../../../.nvm/versions/node/v14.8.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+})({"src/models/User.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.User = void 0;
+
+var User =
+/** @class */
+function () {
+  function User(data) {
+    this.data = data; // ! events is an object with key as string and value of the key will be an array of callback function
+
+    this.events = {};
+  }
+
+  User.prototype.get = function (propName) {
+    return this.data[propName];
+  };
+
+  User.prototype.set = function (update) {
+    // this.data.name = update.name;
+    // this.data.age = update.age;
+    // !Object.assign is inbuilt JS method which assigns all the values of update to this.data's properties
+    Object.assign(this.data, update);
+  };
+
+  User.prototype.on = function (eventName, callback) {
+    var handlers = this.events[eventName] || []; // console.log("handlers=>", handlers)
+
+    handlers.push(callback);
+    console.log("handlers=>", handlers);
+    this.events[eventName] = handlers;
+  };
+
+  User.prototype.trigger = function (eventName) {
+    var handlers = this.events[eventName];
+
+    if (!handlers || handlers.length === 0) {
+      return;
+    }
+
+    console.log("handlers=>", handlers); //  !iterate through handlers and run all callbacks
+
+    handlers.forEach(function (callback) {
+      callback();
+    });
+  };
+
+  return User;
+}();
+
+exports.User = User;
+},{}],"src/index.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var User_1 = require("./models/User");
+
+var user = new User_1.User({});
+user.set({
+  name: 'vipul'
+});
+console.log(user.get('name')); // console.log(user.get('age'))
+
+user.on('click', function () {
+  console.log('click1');
+});
+user.on('click', function () {
+  console.log('click2');
+});
+user.on('save', function () {
+  console.log('save');
+});
+user.trigger('click');
+},{"./models/User":"src/models/User.ts"}],"../../../../.nvm/versions/node/v14.8.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -147,7 +224,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55618" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56692" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
