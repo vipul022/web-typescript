@@ -1,8 +1,12 @@
+import axios, {AxiosResponse} from 'axios';
+
 
 interface UserProps {
   // ! ? means optional
+  id?: number,
   name?: string,
   age?: number
+
 }
 // !type alias
 type Callback = () => void
@@ -45,6 +49,28 @@ export class User {
      handlers.forEach(callback => {
        callback()
      });
+   }
+
+   fetch():void{
+      axios.get(`http://localhost:3000/users/${this.get('id')}`)
+      // !AxiosResponse is provided by axios
+      .then((response: AxiosResponse):void => {
+        console.log("response=>", response)
+          this.set(response.data )
+      })
+   }
+
+   save(): void {
+     const id = this.get('id')
+     console.log("id=>", id)
+     if(id) {
+      //!  put request
+      axios.put(`http://localhost:3000/users/${id}`, this.data)
+
+     }else {
+      //  !post request
+      axios.post("http://localhost:3000/users/", this.data)
+     }
    }
 
 
